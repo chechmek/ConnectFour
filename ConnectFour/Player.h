@@ -12,7 +12,7 @@ struct player {
 	int play(const F& field) {
 		int col = -1;
 		while (true) {
-			cout << "Type in column";
+			cout << "Type in column: ";
 			cin >> col;
 			--col;
 			if (col < 0 || col > field.width - 1) {
