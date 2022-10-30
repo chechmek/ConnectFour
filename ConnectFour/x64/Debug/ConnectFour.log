@@ -1,3 +1,3 @@
 ﻿  ConnectFour.cpp
-C:\Users\RomanBabukh\source\repos\ConnectFour\ConnectFour\ConnectFour.cpp(54): warning C4715: 'Game::placeStone': not all control paths return a value
+C:\Users\RomanBabukh\source\repos\ConnectFour\ConnectFour\ConnectFour.cpp(101): warning C4715: 'Game::placeStone': not all control paths return a value
   ConnectFour.vcxproj -> C:\Users\RomanBabukh\source\repos\ConnectFour\x64\Debug\ConnectFour.exe
