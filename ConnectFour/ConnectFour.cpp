@@ -2,54 +2,10 @@
 #include "Player.h"
 #include "Playfield.h"
 #include <vector>
+#include <Windows.h>
+#include <cstdlib>
 
 using namespace std;
-
-struct position {
-	int h;
-	int w;
-	position(int W, int H) {
-		w = W;
-		h = H;
-	}
-};
-struct aiplayer {
-private:
-	vector<position> get_possible_moves(const playfield& field) {
-		vector<position> possible_moves;
-		for (int i = 0; i < field.width; ++i) {
-			int h = field.height - 1;
-			while (true)
-			{
-				if (field.stoneat(i, h) != field.none) {
-					--h;
-					continue;
-				}
-				else {
-					position pos(i, h);
-					possible_moves.push_back(pos);
-				}
-			}
-		}
-	}
-public:
-	int play(const playfield& field) {
-		vector<position> possible_moves;
-		possible_moves.reserve(7);
-		possible_moves = get_possible_moves(field);
-		cout << "possible moves: ";
-		for (position pos : possible_moves) {
-			cout << "(" << pos.w << "," << pos.h << "), ";
-		}
-		cout << endl;
-		while (possible_moves.size() > 1) {
-
-		}
-		cout << "decided to play: " << possible_moves[0].w;
-		return possible_moves[0].w;
-	}
-};
-
 
 template<typename F>
 class UI {
@@ -68,6 +24,115 @@ public:
 	}
 	void show_victory_screen(char signature) {
 		cout << "Player " << (int)signature << " wins!" << endl;
+	}
+};
+
+template<typename F>
+struct aiplayer{
+private:
+	int random_beetwen(int min, int max) {
+		return rand() % (max - min + 1) + min;
+	}
+	struct position {
+		int h;
+		int w;
+		position(int W, int H) {
+			w = W;
+			h = H;
+		}
+	};
+	int wait_mls = 1000;
+	char mysign;
+	char enemysign;
+	vector<position> get_possible_moves(const F& field) {
+		vector<position> possible_moves;
+		possible_moves.reserve(7);
+		for (int i = 0; i < field.width; ++i) {
+			int h = field.height - 1;
+			while (true)
+			{
+				if (field.stoneat(h, i) != field.none) {
+					--h;
+					continue;
+				}
+				else {
+					position pos(h, i);
+					possible_moves.push_back(pos);
+					break;
+				}
+			}
+		}
+		return possible_moves;
+	}
+	int get_stone_count(const F& field) {
+		int count = 0;
+		for (int i = 0; i < field.height; ++i) {
+			for(int j = 0; j < field.width; ++j)
+				if (field.stoneat(i, j) != field.none) {
+					++count;
+			}
+		}
+		return count;
+	}
+	void define_signs(int stone_count, const F& field) {
+		if (stone_count % 2 == 1)
+		{
+			mysign = field.player2;
+			enemysign = field.player1;
+		}
+		else {
+			mysign = field.player1;
+			enemysign = field.player2;
+		}
+	}
+	bool is_stone_near(const F& field, int w, int h, char sign) {
+		if (field.stoneat(h, w + 1) == sign) // right
+			return true;
+		if (field.stoneat(h, w - 1) == sign) // left
+			return true;
+		if (field.stoneat(h+1, w) == sign) // down
+			return true;
+		if (field.stoneat(h+1, w + 1) == sign) // diag right
+			return true;
+		if (field.stoneat(h+1, w - 1) == sign) // diag left
+			return true;
+		return false;
+	}
+public:
+	int play(const F& field) {
+		vector<position> possible_moves;
+		int move_to_play;
+		possible_moves.reserve(7);
+		possible_moves = get_possible_moves(field);
+		int stone_count = get_stone_count(field);
+		if (stone_count < 2) {
+			define_signs(stone_count, field);
+		}
+		
+		while (possible_moves.size() > 1) {
+			if (stone_count < 2) {
+				Sleep(wait_mls);
+				return 3;// middle of map
+			}
+			for (int i = 0; i < possible_moves.size(); ++i) {
+				if (!is_stone_near(field, possible_moves[i].h, possible_moves[i].w, mysign))
+				{ 
+					/*cout << endl << "stone count: " << stone_count << endl;
+					cout << "possible moves: ";
+					for (position pos : possible_moves) {
+						cout << "(" << pos.w << "," << pos.h << "), ";
+					}
+					cout << endl;*/
+					possible_moves.erase(possible_moves.begin() + i);
+				}
+				
+			}
+			break;
+		}
+		move_to_play = random_beetwen(0, possible_moves.size() - 1);
+		cout << "decided to play: " << move_to_play;
+		Sleep(wait_mls);
+		return move_to_play;
 	}
 };
 
@@ -105,7 +170,7 @@ class Game {
 	}
 	bool connectedDown(const gamefield& f, int h, int w, char sign) {
 
-for (int i = h; i < h + 4; ++i) {
+		for (int i = h; i < h + 4; ++i) {
 			if (f.stoneat(i, w) != sign)
 				return false;
 		}
@@ -125,23 +190,6 @@ for (int i = h; i < h + 4; ++i) {
 		}
 		return true;
 	}
-	void connectedTests() {
-		gamefield testField1;
-		for (int i = 0; i < testField1.height; ++i) {
-			for (int j = 0; j < testField1.width; ++j) {
-				testField1.rep[i][j] = 0;
-			}
-		}
-		testField1.rep[5][0] = 1;
-		testField1.rep[5][1] = 1;
-		testField1.rep[5][2] = 1;
-		testField1.rep[5][3] = 1;
-		ui.show_field(testField1);
-
-		bool res = checkIfConnected(testField1, 1);
-
-		cout << res;
-	}
 	bool placeStone(int col, gamefield& field, char sign) {
 		
 		int yPos = -1;
@@ -157,11 +205,22 @@ for (int i = h; i < h + 4; ++i) {
 			}
 		}
 	}
-	bool play(player<gamefield>& player, char signature) {
+	bool play(fplayer& player, char signature) {
 		int col = player.play(field);
 		bool res = placeStone(col, field, signature);
 		ui.show_field(field);
 		
+		if (checkIfConnected(field, signature)) {
+			isEnded = true;
+			ui.show_victory_screen(signature);
+		}
+		return res;
+	}
+	bool play(splayer& player, char signature) {
+		int col = player.play(field);
+		bool res = placeStone(col, field, signature);
+		ui.show_field(field);
+
 		if (checkIfConnected(field, signature)) {
 			isEnded = true;
 			ui.show_victory_screen(signature);
@@ -182,7 +241,6 @@ public:
 	}
 	void Run() {
 		bool moved;
-		//connectedTests();
 		ui.show_field(field);
 		
 		while (!isEnded) {
@@ -194,7 +252,6 @@ public:
 			while (!moved)
 			{
 				moved = play(player1, field.player1);
-			//cout << "field.height: " << field.height << endl;
 			}
 			if (isEnded)
 				break;
@@ -212,6 +269,6 @@ public:
 
 int main()
 {
-	Game<player<playfield>, player<playfield>, playfield> game(1);
+	Game<player<playfield>, aiplayer<playfield>, playfield> game(1);
 	game.Run();
 }
