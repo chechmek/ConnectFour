@@ -20,10 +20,19 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Player.h">
+    <ClInclude Include="ConsolePlayer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Playfield.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="AiPlayer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="UI.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Player.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

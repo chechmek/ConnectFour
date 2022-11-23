@@ -130,8 +130,11 @@
     <ClCompile Include="ConnectFour.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AiPlayer.h" />
+    <ClInclude Include="ConsolePlayer.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Playfield.h" />
+    <ClInclude Include="UI.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
