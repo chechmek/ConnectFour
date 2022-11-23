@@ -1,11 +1,18 @@
 ﻿  ConnectFour.cpp
 D:\PAPKA\Programs\UZH С++\ConnectFour\ConnectFour\AiPlayer.h(112,1): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
-D:\PAPKA\Programs\UZH С++\ConnectFour\ConnectFour\AiPlayer.h(82): message : while compiling class template member function 'int aiplayer<playfield>::play(const F &)'
+D:\PAPKA\Programs\UZH С++\ConnectFour\ConnectFour\AiPlayer.h(82): message : while compiling class template member function 'int aiplayer<F>::play(const F &)'
           with
           [
               F=playfield
           ]
-D:\PAPKA\Programs\UZH С++\ConnectFour\ConnectFour\ConnectFour.cpp(19): message : see reference to class template instantiation 'aiplayer<playfield>' being compiled
-D:\PAPKA\Programs\UZH С++\ConnectFour\ConnectFour\ConnectFour.cpp(148): message : see reference to class template instantiation 'Game<consoleplayer<playfield>,aiplayer<playfield>,playfield>' being compiled
-D:\PAPKA\Programs\UZH С++\ConnectFour\ConnectFour\ConnectFour.cpp(83): warning C4715: 'Game<consoleplayer<playfield>,aiplayer<playfield>,playfield>::placeStone': not all control paths return a value
+D:\PAPKA\Programs\UZH С++\ConnectFour\ConnectFour\ConnectFour.cpp(28): message : see reference to class template instantiation 'aiplayer<F>' being compiled
+          with
+          [
+              F=playfield
+          ]
+D:\PAPKA\Programs\UZH С++\ConnectFour\ConnectFour\ConnectFour.cpp(22): message : while compiling class template member function 'player *PlayerFactory<playfield>::get_player(int)'
+D:\PAPKA\Programs\UZH С++\ConnectFour\ConnectFour\ConnectFour.cpp(168): message : see reference to function template instantiation 'player *PlayerFactory<playfield>::get_player(int)' being compiled
+D:\PAPKA\Programs\UZH С++\ConnectFour\ConnectFour\ConnectFour.cpp(160): message : see reference to class template instantiation 'PlayerFactory<playfield>' being compiled
+D:\PAPKA\Programs\UZH С++\ConnectFour\ConnectFour\ConnectFour.cpp(32): warning C4715: 'PlayerFactory<playfield>::get_player': not all control paths return a value
+D:\PAPKA\Programs\UZH С++\ConnectFour\ConnectFour\ConnectFour.cpp(103): warning C4715: 'Game<playfield>::placeStone': not all control paths return a value
   ConnectFour.vcxproj -> D:\PAPKA\Programs\UZH С++\ConnectFour\x64\Debug\ConnectFour.exe

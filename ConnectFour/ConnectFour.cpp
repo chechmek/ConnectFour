@@ -10,11 +10,33 @@
 
 using namespace std;
 
-template<typename fplayer, typename splayer, typename gamefield>
+template<typename F>
+class PlayerFactory {
+private:
+	vector<string> player_types{ "You(console input)", "Romans ai player" };
+public:
+	void show_types() {
+		for (int i = 0; i < player_types.size(); ++i)
+			cout << i + 1 << ". " << player_types[i] << endl;
+	}
+	player* get_player(int i) {
+		switch (i)
+		{
+		case 1:
+			return new consoleplayer<F>();
+		case 2:
+			return new aiplayer<F>();
+		default:
+			break;
+		}
+	}
+};
+
+template<typename gamefield>
 class Game {
 	gamefield field;
-	fplayer player1;
-	splayer player2;
+	player& player1;
+	player& player2;
 	UI<gamefield> ui;
 	bool isEnded;
 	bool checkIfConnected(const gamefield& f, char sign) {
@@ -79,17 +101,6 @@ class Game {
 			}
 		}
 	}
-	/*bool play(player& player, char signature) {
-		int col = player.play(field);
-		bool res = placeStone(col, field, signature);
-		ui.show_field(field);
-		
-		if (checkIfConnected(field, signature)) {
-			isEnded = true;
-			ui.show_victory_screen(signature);
-		}
-		return res;
-	}*/
 	bool play(player& player, char signature) {
 		int col = player.play(field);
 		bool res = placeStone(col, field, signature);
@@ -109,7 +120,8 @@ class Game {
 		}
 	}
 public:
-	Game(int a) {
+	Game(player &pl1, player &pl2) 
+		: player1(pl1), player2(pl2) {
 		initField();
 		isEnded = false;
 	}
@@ -143,6 +155,16 @@ public:
 
 int main()
 {
-	Game<consoleplayer<playfield>, aiplayer<playfield>, playfield> game(1);
+	int i1;
+	int i2;
+	PlayerFactory<playfield> factory;
+
+	factory.show_types();
+	cout << "Select first player" << endl;
+	cin >> i1;
+	cout << "Select second player" << endl;
+	cin >> i2;
+
+	Game<playfield> game(*factory.get_player(i1), *factory.get_player(i2));
 	game.Run();
 }
